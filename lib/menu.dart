@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:money_tracker/pages/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:money_tracker/pages/login.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -16,6 +19,7 @@ class MyHomePage extends StatelessWidget {
   // always marked "final".
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
     return Scaffold(
       appBar: AppBar(
         // Set title aplikasi menjadi Money Tracker
@@ -126,7 +130,7 @@ class MyHomePage extends StatelessWidget {
                       onTap: () async {
                         final response = await request.logout(
                             // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
-                            "https://<URL_APP_KAMU>/auth/logout/");
+                            "https://django-tutorial-production-2892.up.railway.app/auth/logout/");
                         String message = response["message"];
                         if (response['status']) {
                           String uname = response["username"];

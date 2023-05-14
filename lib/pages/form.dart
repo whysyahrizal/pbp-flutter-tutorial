@@ -190,7 +190,7 @@ class _MyFormPageState extends State<MyFormPage> {
                       // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
                       final response = await request.postJson(
                           "https://django-tutorial-production-2892.up.railway.app/tracker/create-flutter/",
-                          convert.jsonEncode(<String, String>{
+                          json.encode(<String, String>{
                             'name': _namaTransaksi,
                             'type': tipeTransaksi,
                             'amount': jumlahTransaksi.toString(),
