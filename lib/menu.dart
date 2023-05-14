@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:money_tracker/pages/transaction.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -16,14 +19,16 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         // Set title aplikasi menjadi Money Tracker
-        title: const Text( 
+        title: const Text(
           'Money Tracker',
         ),
       ),
-      body: SingleChildScrollView( // Widget wrapper yang dapat discroll
-        child: Padding( 
+      body: SingleChildScrollView(
+        // Widget wrapper yang dapat discroll
+        child: Padding(
           padding: const EdgeInsets.all(10.0), // Set padding dari halaman
-          child: Column( // Widget untuk menampilkan children secara vertikal
+          child: Column(
+            // Widget untuk menampilkan children secara vertikal
             children: <Widget>[
               const Padding(
                 padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -48,15 +53,18 @@ class MyHomePage extends StatelessWidget {
                 children: <Widget>[
                   Material(
                     color: Colors.green,
-                    child: InkWell( // Area responsive terhadap sentuhan
+                    child: InkWell(
+                      // Area responsive terhadap sentuhan
                       onTap: () {
-                        // Memunculkan SnackBar ketika diklik
-                        ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(const SnackBar(
-                          content: Text("Kamu telah menekan tombol Lihat Riwayat Transaksi!")));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const TransactionPage()),
+                        );
                       },
-                      child: Container( // Container untuk menyimpan Icon dan Text
+
+                      child: Container(
+                        // Container untuk menyimpan Icon dan Text
                         padding: const EdgeInsets.all(8),
                         child: Center(
                           child: Column(
@@ -84,9 +92,10 @@ class MyHomePage extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(const SnackBar(
-                          content: Text("Kamu telah menekan tombol Tambah Transaksi!")));
+                          ..hideCurrentSnackBar()
+                          ..showSnackBar(const SnackBar(
+                              content: Text(
+                                  "Kamu telah menekan tombol Tambah Transaksi!")));
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
@@ -114,11 +123,26 @@ class MyHomePage extends StatelessWidget {
                   Material(
                     color: Colors.green,
                     child: InkWell(
-                      onTap: () {
-                        ScaffoldMessenger.of(context)
-                        ..hideCurrentSnackBar()
-                        ..showSnackBar(const SnackBar(
-                          content: Text("Kamu telah menekan tombol Logout!")));
+                      onTap: () async {
+                        final response = await request.logout(
+                            // TODO: Ganti URL dan jangan lupa tambahkan trailing slash (/) di akhir URL!
+                            "https://<URL_APP_KAMU>/auth/logout/");
+                        String message = response["message"];
+                        if (response['status']) {
+                          String uname = response["username"];
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$message Sampai jumpa, $uname."),
+                          ));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("$message"),
+                          ));
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
